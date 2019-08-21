@@ -47,7 +47,8 @@ func setupTestCase(t *testing.T) func() {
 }
 
 type testConfig struct {
-	a string
+	ServerName string
+	UserName   string
 }
 
 func TestDot_getConfigPath(t *testing.T) {
@@ -99,9 +100,6 @@ func TestDot_getConfigPath(t *testing.T) {
 }
 
 func TestDot_Save(t *testing.T) {
-
-	// TODO clean up test files...
-
 	teardown := setupTestCase(t)
 	defer teardown()
 
@@ -120,7 +118,7 @@ func TestDot_Save(t *testing.T) {
 		{
 			"succuess test",
 			fields{appName},
-			args{&testConfig{"bbbb"}},
+			args{&testConfig{"b", "c"}},
 			false,
 		},
 	}
