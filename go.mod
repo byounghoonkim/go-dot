@@ -1,4 +1,4 @@
-module go-dot
+module github.com/byounghoonkim/go-dot
 
 go 1.12
 
