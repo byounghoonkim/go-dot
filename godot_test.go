@@ -1,6 +1,7 @@
 package dot
 
 import (
+	"os"
 	"os/user"
 	"path/filepath"
 	"testing"
@@ -9,18 +10,51 @@ import (
 var appName = "testapp"
 var configName = "testConfig"
 
+func targetPath() (string, error) {
+	usr, err := user.Current()
+	if err != nil {
+		return "", err
+	}
+
+	return filepath.Join(usr.HomeDir, "."+appName, "."+configName), nil
+}
+
+func removeTargetPath() error {
+	target, err := targetPath()
+	if err != nil {
+		return err
+	}
+
+	return os.RemoveAll(filepath.Dir(target))
+}
+
+func setupTestCase(t *testing.T) func() {
+	t.Log("called setup test case")
+	err := removeTargetPath()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return func() {
+		err := removeTargetPath()
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		t.Log("called teardown test case")
+	}
+
+}
+
 type testConfig struct {
 	a string
 }
 
 func TestDot_getConfigPath(t *testing.T) {
-
-	usr, err := user.Current()
+	wantString, err := targetPath()
 	if err != nil {
 		t.Fatal(err)
 	}
-
-	wantString := filepath.Join(usr.HomeDir, "."+appName, "."+configName)
 
 	type testConfig struct {
 		a string
@@ -67,6 +101,10 @@ func TestDot_getConfigPath(t *testing.T) {
 func TestDot_Save(t *testing.T) {
 
 	// TODO clean up test files...
+
+	teardown := setupTestCase(t)
+	defer teardown()
+
 	type fields struct {
 		AppName string
 	}
