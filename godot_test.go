@@ -4,6 +4,7 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
+	"reflect"
 	"testing"
 )
 
@@ -132,6 +133,126 @@ func TestDot_Save(t *testing.T) {
 			}
 			if err := d.Load(tt.args.configuration); (err != nil) != tt.wantErr {
 				t.Errorf("Dot.Load() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func TestNew(t *testing.T) {
+	tests := []struct {
+		name string
+		want *Dot
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := New(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("New() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestDot_Load(t *testing.T) {
+	type fields struct {
+		AppName string
+	}
+	type args struct {
+		configuration interface{}
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := &Dot{
+				AppName: tt.fields.AppName,
+			}
+			if err := d.Load(tt.args.configuration); (err != nil) != tt.wantErr {
+				t.Errorf("Dot.Load() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func TestDot_loadFromYAML(t *testing.T) {
+	type fields struct {
+		AppName string
+	}
+	type args struct {
+		configuraiton interface{}
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := &Dot{
+				AppName: tt.fields.AppName,
+			}
+			if err := d.loadFromYAML(tt.args.configuraiton); (err != nil) != tt.wantErr {
+				t.Errorf("Dot.loadFromYAML() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func TestDot_saveToYAML(t *testing.T) {
+	type fields struct {
+		AppName string
+	}
+	type args struct {
+		configuration interface{}
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := &Dot{
+				AppName: tt.fields.AppName,
+			}
+			if err := d.saveToYAML(tt.args.configuration); (err != nil) != tt.wantErr {
+				t.Errorf("Dot.saveToYAML() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func TestDot_Dump(t *testing.T) {
+	type fields struct {
+		AppName string
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := &Dot{
+				AppName: tt.fields.AppName,
+			}
+			if err := d.Dump(); (err != nil) != tt.wantErr {
+				t.Errorf("Dot.Dump() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}
