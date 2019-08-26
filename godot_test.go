@@ -2,7 +2,6 @@ package dot
 
 import (
 	"os"
-	"os/user"
 	"path/filepath"
 	"reflect"
 	"testing"
@@ -12,12 +11,12 @@ var appName = "testapp"
 var configName = "testConfig"
 
 func targetPath() (string, error) {
-	usr, err := user.Current()
+	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		return "", err
 	}
 
-	return filepath.Join(usr.HomeDir, "."+appName, "."+configName), nil
+	return filepath.Join(homeDir, "."+appName, "."+configName), nil
 }
 
 func removeTargetPath() error {

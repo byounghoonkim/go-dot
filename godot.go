@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"os/user"
 	"path/filepath"
 	"reflect"
 	"strings"
@@ -38,7 +37,7 @@ func (d *Dot) Load(configuration interface{}) error {
 }
 
 func (d *Dot) getConfigPath(configuration interface{}) (string, error) {
-	usr, err := user.Current()
+	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		return "", err
 	}
@@ -48,7 +47,7 @@ func (d *Dot) getConfigPath(configuration interface{}) (string, error) {
 	fields := strings.Split(structName, ".")
 	fileName := "." + fields[len(fields)-1]
 
-	return filepath.Join(usr.HomeDir, "."+d.AppName, fileName), nil
+	return filepath.Join(homeDir, "."+d.AppName, fileName), nil
 }
 
 func (d *Dot) loadFromYAML(configuraiton interface{}) error {
