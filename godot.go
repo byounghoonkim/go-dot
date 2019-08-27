@@ -15,12 +15,22 @@ import (
 // Create with the dot.New() function.
 type Dot struct {
 	AppName string
+	Folder  Folder
 }
+
+// Folder ...
+type Folder int
+
+const (
+	HomeDir    Folder = iota
+	CurrentDir        = iota
+)
 
 // New creates a new dot structure with default Name.
 func New() *Dot {
 	return &Dot{
 		AppName: filepath.Base(os.Args[0]),
+		Folder:  HomeDir,
 	}
 }
 
@@ -36,8 +46,29 @@ func (d *Dot) Load(configuration interface{}) error {
 
 }
 
+func (d *Dot) getConfigFolder() (string, error) {
+	folder := ""
+	switch d.Folder {
+	case HomeDir:
+		usr, err := user.Current()
+		if err != nil {
+			return "", err
+		}
+		folder = usr.HomeDir
+	case CurrentDir:
+		wd, err := os.Getwd()
+		if err != nil {
+			return "", err
+		}
+		folder = wd
+	default:
+		return "", fmt.Errorf("unknown folder type")
+	}
+	return folder, nil
+}
+
 func (d *Dot) getConfigPath(configuration interface{}) (string, error) {
-	homeDir, err := os.UserHomeDir()
+	configFolder, err := d.getConfigFolder()
 	if err != nil {
 		return "", err
 	}
@@ -47,7 +78,7 @@ func (d *Dot) getConfigPath(configuration interface{}) (string, error) {
 	fields := strings.Split(structName, ".")
 	fileName := "." + fields[len(fields)-1]
 
-	return filepath.Join(homeDir, "."+d.AppName, fileName), nil
+	return filepath.Join(configFolder, "."+d.AppName, fileName), nil
 }
 
 func (d *Dot) loadFromYAML(configuraiton interface{}) error {

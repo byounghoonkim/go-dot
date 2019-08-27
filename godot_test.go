@@ -63,6 +63,7 @@ func TestDot_getConfigPath(t *testing.T) {
 
 	type fields struct {
 		AppName string
+		Folder  Folder
 	}
 	type args struct {
 		configuration interface{}
@@ -76,9 +77,22 @@ func TestDot_getConfigPath(t *testing.T) {
 	}{
 		{
 			"succuess test",
-			fields{appName},
+			fields{
+				appName,
+				HomeDir,
+			},
 			args{&testConfig{}},
 			wantString,
+			false,
+		},
+		{
+			"succuess test - current dir",
+			fields{
+				appName,
+				CurrentDir,
+			},
+			args{&testConfig{}},
+			"aaaaa",
 			false,
 		},
 	}
@@ -86,6 +100,7 @@ func TestDot_getConfigPath(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			d := &Dot{
 				AppName: tt.fields.AppName,
+				Folder:  tt.fields.Folder,
 			}
 			got, err := d.getConfigPath(tt.args.configuration)
 			if (err != nil) != tt.wantErr {
@@ -252,6 +267,37 @@ func TestDot_Dump(t *testing.T) {
 			}
 			if err := d.Dump(); (err != nil) != tt.wantErr {
 				t.Errorf("Dot.Dump() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func TestDot_getConfigFolder(t *testing.T) {
+	type fields struct {
+		AppName string
+		Folder  Folder
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		want    string
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := &Dot{
+				AppName: tt.fields.AppName,
+				Folder:  tt.fields.Folder,
+			}
+			got, err := d.getConfigFolder()
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Dot.getConfigFolder() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("Dot.getConfigFolder() = %v, want %v", got, tt.want)
 			}
 		})
 	}
