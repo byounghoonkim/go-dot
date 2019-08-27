@@ -50,11 +50,11 @@ func (d *Dot) getConfigFolder() (string, error) {
 	folder := ""
 	switch d.Folder {
 	case HomeDir:
-		usr, err := user.Current()
+		homeDir, err := os.UserHomeDir()
 		if err != nil {
 			return "", err
 		}
-		folder = usr.HomeDir
+		folder = homeDir
 	case CurrentDir:
 		wd, err := os.Getwd()
 		if err != nil {
