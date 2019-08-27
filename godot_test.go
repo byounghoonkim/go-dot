@@ -85,16 +85,6 @@ func TestDot_getConfigPath(t *testing.T) {
 			wantString,
 			false,
 		},
-		{
-			"succuess test - current dir",
-			fields{
-				appName,
-				CurrentDir,
-			},
-			args{&testConfig{}},
-			"aaaaa",
-			false,
-		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
