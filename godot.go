@@ -22,8 +22,10 @@ type Dot struct {
 type Folder int
 
 const (
-	HomeDir    Folder = iota
-	CurrentDir        = iota
+	// HomeDir - user home dir
+	HomeDir Folder = iota
+	// CurrentDir - current dir
+	CurrentDir = iota
 )
 
 // New creates a new dot structure with default Name.
