@@ -5,12 +5,11 @@ import (
 
 	"github.com/byounghoonkim/go-dot"
 )
-	
 
 func main() {
 
 	type Config struct {
-		Server string
+		Server   string
 		Username string
 	}
 
@@ -21,10 +20,21 @@ func main() {
 
 	d := dot.New()
 	err := d.Save(&config)
-
 	if err != nil {
 		panic(err)
 	}
+
+	configFolder, err := d.GetConfigFolder()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("config folder : ", configFolder)
+
+	configPath, err := d.GetConfigPath(&config)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("config path   : ", configPath)
 
 	config2 := Config{}
 	err = d.Load(&config2)
@@ -32,6 +42,6 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println(config2)
+	fmt.Printf("%+v", config2)
 
 }
