@@ -49,6 +49,18 @@ func New() *Dot {
 	}
 }
 
+// ByFileFormat set file format enum to Dot structure
+func (d *Dot) ByFileFormat(ff FileFormat) *Dot {
+	d.FileFormat = ff
+	return d
+}
+
+// ByFolder set Folder enum to Dot structure
+func (d *Dot) ByFolder(f Folder) *Dot {
+	d.Folder = f
+	return d
+}
+
 // Load loads Configuration from Dot files
 func (d *Dot) Load(configuration interface{}) error {
 
