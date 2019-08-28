@@ -16,7 +16,7 @@ func targetPath() (string, error) {
 		return "", err
 	}
 
-	return filepath.Join(homeDir, "."+appName, "."+configName), nil
+	return filepath.Join(homeDir, "."+appName, configName), nil
 }
 
 func removeTargetPath() error {

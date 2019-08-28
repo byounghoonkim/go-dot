@@ -76,7 +76,7 @@ func (d *Dot) getConfigPath(configuration interface{}) (string, error) {
 	configValue := reflect.ValueOf(configuration)
 	structName := configValue.Type().String()
 	fields := strings.Split(structName, ".")
-	fileName := "." + fields[len(fields)-1]
+	fileName := fields[len(fields)-1]
 
 	return filepath.Join(configFolder, "."+d.AppName, fileName), nil
 }
@@ -94,7 +94,7 @@ func (d *Dot) loadFromYAML(configuraiton interface{}) error {
 		return err
 	}
 
-	err = yaml.Unmarshal(data, &configuraiton)
+	err = yaml.Unmarshal(data, configuraiton)
 	if err != nil {
 		return err
 	}
