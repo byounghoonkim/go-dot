@@ -1,6 +1,7 @@
 package dot
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -14,11 +15,12 @@ import (
 // Dot is the main structure of go dot configuration library.
 // Create with the dot.New() function.
 type Dot struct {
-	AppName string
-	Folder  Folder
+	AppName    string
+	Folder     Folder
+	FileFormat FileFormat
 }
 
-// Folder ...
+// Folder Enum
 type Folder int
 
 const (
@@ -28,11 +30,22 @@ const (
 	CurrentDir = iota
 )
 
+// FileFormat Enum
+type FileFormat string
+
+const (
+	// YAML format
+	YAML = ".yml"
+	//JSON format
+	JSON = ".json"
+)
+
 // New creates a new dot structure with default Name.
 func New() *Dot {
 	return &Dot{
-		AppName: filepath.Base(os.Args[0]),
-		Folder:  HomeDir,
+		AppName:    filepath.Base(os.Args[0]),
+		Folder:     HomeDir,
+		FileFormat: YAML,
 	}
 }
 
@@ -44,11 +57,12 @@ func (d *Dot) Load(configuration interface{}) error {
 		return fmt.Errorf("configuration should be a pointer to a struct type")
 	}
 
-	return d.loadFromYAML(configuration)
+	return d.load(configuration)
 
 }
 
-func (d *Dot) getConfigFolder() (string, error) {
+// GetConfigFolder 는 설정 폴더를 리턴한다
+func (d *Dot) GetConfigFolder() (string, error) {
 	folder := ""
 	switch d.Folder {
 	case HomeDir:
@@ -66,11 +80,12 @@ func (d *Dot) getConfigFolder() (string, error) {
 	default:
 		return "", fmt.Errorf("unknown folder type")
 	}
-	return folder, nil
+	return filepath.Join(folder, "."+d.AppName), nil
 }
 
-func (d *Dot) getConfigPath(configuration interface{}) (string, error) {
-	configFolder, err := d.getConfigFolder()
+// GetConfigPath 는 설정 파일 전체 경로를 리턴한다.
+func (d *Dot) GetConfigPath(configuration interface{}) (string, error) {
+	configFolder, err := d.GetConfigFolder()
 	if err != nil {
 		return "", err
 	}
@@ -79,24 +94,33 @@ func (d *Dot) getConfigPath(configuration interface{}) (string, error) {
 	structName := configValue.Type().String()
 	fields := strings.Split(structName, ".")
 	fileName := fields[len(fields)-1]
+	fileName += string(d.FileFormat)
 
-	return filepath.Join(configFolder, "."+d.AppName, fileName), nil
+	return filepath.Join(configFolder, fileName), nil
 }
 
-func (d *Dot) loadFromYAML(configuraiton interface{}) error {
+func (d *Dot) load(configuraiton interface{}) error {
 
-	configPath, err := d.getConfigPath(configuraiton)
+	configPath, err := d.GetConfigPath(configuraiton)
 	if err != nil {
 		return err
 	}
 
-	configPath += ".yml"
 	data, err := ioutil.ReadFile(configPath)
 	if err != nil {
 		return err
 	}
 
-	err = yaml.Unmarshal(data, configuraiton)
+	switch d.FileFormat {
+	case YAML:
+		err = yaml.Unmarshal(data, configuraiton)
+	case JSON:
+		err = json.Unmarshal(data, configuraiton)
+	default:
+		err = fmt.Errorf("unsupport file format")
+
+	}
+
 	if err != nil {
 		return err
 	}
@@ -111,21 +135,29 @@ func (d *Dot) Save(configuration interface{}) error {
 		return fmt.Errorf("configuration should be a pointer to a struct type")
 	}
 
-	return d.saveToYAML(configuration)
+	return d.save(configuration)
 }
 
-func (d *Dot) saveToYAML(configuration interface{}) error {
-	data, err := yaml.Marshal(configuration)
+func (d *Dot) save(configuration interface{}) error {
+	var err error
+	data := []byte{}
+	switch d.FileFormat {
+	case YAML:
+		data, err = yaml.Marshal(configuration)
+	case JSON:
+		data, err = json.Marshal(configuration)
+	default:
+		data, err = nil, fmt.Errorf("unsupport file format")
+	}
+
 	if err != nil {
 		return err
 	}
 
-	configPath, err := d.getConfigPath(configuration)
+	configPath, err := d.GetConfigPath(configuration)
 	if err != nil {
 		return err
 	}
-
-	configPath += ".yml"
 
 	os.MkdirAll(filepath.Dir(configPath), 0700)
 

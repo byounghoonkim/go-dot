@@ -92,7 +92,7 @@ func TestDot_getConfigPath(t *testing.T) {
 				AppName: tt.fields.AppName,
 				Folder:  tt.fields.Folder,
 			}
-			got, err := d.getConfigPath(tt.args.configuration)
+			got, err := d.GetConfigPath(tt.args.configuration)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Dot.getConfigPath() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -109,7 +109,8 @@ func TestDot_Save(t *testing.T) {
 	defer teardown()
 
 	type fields struct {
-		AppName string
+		AppName    string
+		FileFormat FileFormat
 	}
 	type args struct {
 		configuration interface{}
@@ -122,7 +123,7 @@ func TestDot_Save(t *testing.T) {
 	}{
 		{
 			"succuess test",
-			fields{appName},
+			fields{appName, YAML},
 			args{&testConfig{"b", "c"}},
 			false,
 		},
@@ -130,7 +131,8 @@ func TestDot_Save(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := &Dot{
-				AppName: tt.fields.AppName,
+				AppName:    tt.fields.AppName,
+				FileFormat: tt.fields.FileFormat,
 			}
 			if err := d.Save(tt.args.configuration); (err != nil) != tt.wantErr {
 				t.Errorf("Dot.Save() error = %v, wantErr %v", err, tt.wantErr)
@@ -185,7 +187,7 @@ func TestDot_Load(t *testing.T) {
 	}
 }
 
-func TestDot_loadFromYAML(t *testing.T) {
+func TestDot_load(t *testing.T) {
 	type fields struct {
 		AppName string
 	}
@@ -205,14 +207,14 @@ func TestDot_loadFromYAML(t *testing.T) {
 			d := &Dot{
 				AppName: tt.fields.AppName,
 			}
-			if err := d.loadFromYAML(tt.args.configuraiton); (err != nil) != tt.wantErr {
+			if err := d.load(tt.args.configuraiton); (err != nil) != tt.wantErr {
 				t.Errorf("Dot.loadFromYAML() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}
 }
 
-func TestDot_saveToYAML(t *testing.T) {
+func TestDot_save(t *testing.T) {
 	type fields struct {
 		AppName string
 	}
@@ -232,7 +234,7 @@ func TestDot_saveToYAML(t *testing.T) {
 			d := &Dot{
 				AppName: tt.fields.AppName,
 			}
-			if err := d.saveToYAML(tt.args.configuration); (err != nil) != tt.wantErr {
+			if err := d.save(tt.args.configuration); (err != nil) != tt.wantErr {
 				t.Errorf("Dot.saveToYAML() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
@@ -281,7 +283,7 @@ func TestDot_getConfigFolder(t *testing.T) {
 				AppName: tt.fields.AppName,
 				Folder:  tt.fields.Folder,
 			}
-			got, err := d.getConfigFolder()
+			got, err := d.GetConfigFolder()
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Dot.getConfigFolder() error = %v, wantErr %v", err, tt.wantErr)
 				return
