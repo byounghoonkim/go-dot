@@ -12,7 +12,7 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-// Dot is the main structure of go dot configuration library.
+// Dot is the main struct of dot configuration library.
 // Create with the dot.New() function.
 type Dot struct {
 	AppName    string
@@ -40,7 +40,10 @@ const (
 	JSON = ".json"
 )
 
-// New creates a new dot structure with default Name.
+// New creates a new dot struct with default values.
+// default app name is current executable name
+// default folder type is HomeDir
+// default FileFormat is yaml
 func New() *Dot {
 	return &Dot{
 		AppName:    filepath.Base(os.Args[0]),
@@ -49,13 +52,13 @@ func New() *Dot {
 	}
 }
 
-// ByFileFormat set file format enum to Dot structure
+// ByFileFormat set file format enum to Dot struct
 func (d *Dot) ByFileFormat(ff FileFormat) *Dot {
 	d.FileFormat = ff
 	return d
 }
 
-// ByFolder set Folder enum to Dot structure
+// ByFolder set Folder enum to Dot struct
 func (d *Dot) ByFolder(f Folder) *Dot {
 	d.Folder = f
 	return d
@@ -73,7 +76,7 @@ func (d *Dot) Load(configuration interface{}) error {
 
 }
 
-// GetConfigFolder 는 설정 폴더를 리턴한다
+// GetConfigFolder return full path of config folder
 func (d *Dot) GetConfigFolder() (string, error) {
 	folder := ""
 	switch d.Folder {
@@ -95,7 +98,7 @@ func (d *Dot) GetConfigFolder() (string, error) {
 	return filepath.Join(folder, "."+d.AppName), nil
 }
 
-// GetConfigPath 는 설정 파일 전체 경로를 리턴한다.
+// GetConfigPath  return full path of config file
 func (d *Dot) GetConfigPath(configuration interface{}) (string, error) {
 	configFolder, err := d.GetConfigFolder()
 	if err != nil {
@@ -181,8 +184,15 @@ func (d *Dot) save(configuration interface{}) error {
 	return nil
 }
 
-// Dump prints Dot structure informaion.
+// Dump prints Dot struct for debugging
 func (d *Dot) Dump() error {
-	return nil
+	configFolder, err := d.GetConfigFolder()
+	if err != nil {
+		return err
+	}
 
+	fmt.Printf("config folder : %s\n", configFolder)
+	fmt.Printf("%+v", d)
+
+	return nil
 }
