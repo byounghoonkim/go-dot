@@ -51,7 +51,7 @@ type testConfig struct {
 	UserName   string
 }
 
-func TestDot_getConfigPath(t *testing.T) {
+func TestDot_GetConfigPath(t *testing.T) {
 	wantString, err := targetPath()
 	if err != nil {
 		t.Fatal(err)
@@ -264,7 +264,7 @@ func TestDot_Dump(t *testing.T) {
 	}
 }
 
-func TestDot_getConfigFolder(t *testing.T) {
+func TestDot_GetConfigFolder(t *testing.T) {
 	type fields struct {
 		AppName string
 		Folder  Folder
