@@ -29,7 +29,6 @@ func removeTargetPath() error {
 }
 
 func setupTestCase(t *testing.T) func() {
-	t.Log("called setup test case")
 	err := removeTargetPath()
 	if err != nil {
 		t.Fatal(err)
@@ -40,8 +39,6 @@ func setupTestCase(t *testing.T) func() {
 		if err != nil {
 			t.Fatal(err)
 		}
-
-		t.Log("called teardown test case")
 	}
 
 }
