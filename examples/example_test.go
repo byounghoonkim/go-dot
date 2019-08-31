@@ -1,4 +1,4 @@
-package main
+package dot_test
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"github.com/byounghoonkim/go-dot"
 )
 
-func main() {
+func Example() {
 
 	type Config struct {
 		Server   string
