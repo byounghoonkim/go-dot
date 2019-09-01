@@ -189,7 +189,7 @@ func TestDot_load(t *testing.T) {
 		AppName string
 	}
 	type args struct {
-		configuraiton interface{}
+		configuration interface{}
 	}
 	tests := []struct {
 		name    string
@@ -204,7 +204,7 @@ func TestDot_load(t *testing.T) {
 			d := &Dot{
 				AppName: tt.fields.AppName,
 			}
-			if err := d.load(tt.args.configuraiton); (err != nil) != tt.wantErr {
+			if err := d.load(tt.args.configuration); (err != nil) != tt.wantErr {
 				t.Errorf("Dot.loadFromYAML() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
