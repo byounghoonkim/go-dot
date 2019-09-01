@@ -114,9 +114,9 @@ func (d *Dot) GetConfigPath(configuration interface{}) (string, error) {
 	return filepath.Join(configFolder, fileName), nil
 }
 
-func (d *Dot) load(configuraiton interface{}) error {
+func (d *Dot) load(configuration interface{}) error {
 
-	configPath, err := d.GetConfigPath(configuraiton)
+	configPath, err := d.GetConfigPath(configuration)
 	if err != nil {
 		return err
 	}
@@ -128,9 +128,9 @@ func (d *Dot) load(configuraiton interface{}) error {
 
 	switch d.FileFormat {
 	case YAML:
-		err = yaml.Unmarshal(data, configuraiton)
+		err = yaml.Unmarshal(data, configuration)
 	case JSON:
-		err = json.Unmarshal(data, configuraiton)
+		err = json.Unmarshal(data, configuration)
 	default:
 		err = fmt.Errorf("unsupport file format")
 
