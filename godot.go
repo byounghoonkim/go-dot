@@ -155,7 +155,8 @@ func (d *Dot) Save(configuration interface{}) error {
 
 func (d *Dot) save(configuration interface{}) error {
 	var err error
-	data := []byte{}
+	var data []byte
+
 	switch d.FileFormat {
 	case YAML:
 		data, err = yaml.Marshal(configuration)
